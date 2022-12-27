@@ -78,7 +78,6 @@ def main():
 
 
 def wordlist():
-    []
     wordlist = []
     if args['errors']:
         wordlist += errorsAndExpectedInput.generate()
