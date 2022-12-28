@@ -5,6 +5,7 @@ import datetime
 import pytz
 import string
 import random
+import base64
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -50,7 +51,8 @@ parser.add_argument('--dbms', nargs='*', help='all, oracle, mssql, postgresql, m
 parser.add_argument('--collaborator', help='specify domain or IP', default='{collaborator}')
 parser.add_argument('--time', help='specify time delay caused by payloads in seconds', default='{time}')
 parser.add_argument('--ssrf-domain', help='specify a domain to use in ssrf bypasses', default='{domain}')
-parser.add_argument('--note', help='note detailing what was tested and how')
+parser.add_argument('--note', help='note detailing what was tested and how', default='Not specified.')
+parser.add_argument('--reqb64', help='Request that was fuzzed in base64', default=base64.b64encode('Not specified.'.encode('ascii')).decode('ascii'))
 parser.add_argument('--query', help='query collaborator STRING (example: STRING.{collaborator})')
 args = vars(parser.parse_args())
 
@@ -61,7 +63,8 @@ class Payload(Base):
     creationDate = Column(String, default=datetime.datetime.now(pytz.timezone('Asia/Jerusalem')))
     identifier = Column(String)
     payload = Column(Integer)
-    note = Column(String)
+    note = Column(String, default='Not specified.')
+    request = Column(String, default=base64.b64encode('Not specified.'.encode('ascii')).decode('ascii'))
 
 
 Base.metadata.create_all(engine)
@@ -137,7 +140,7 @@ def wordlist():
                 identifier = randomString()
                 word = word.replace('{collaborator}', identifier + '.' + args['collaborator'])
                 word = word.replace('{domain}', args['ssrf_domain'])
-                payload = Payload(identifier=identifier, payload=word, note=args['note'])
+                payload = Payload(identifier=identifier, payload=word, note=args['note'], request=args['reqb64'])
                 session.add(payload)
 
             if '{time}' in word:
@@ -156,15 +159,26 @@ def query():
         print('Payload: ' + payload.payload)
         print('Date: ' + payload.creationDate)
         print('Note: ' + payload.note)
+        print('Request: \n### REQUEST START ###\n' + base64.b64decode(payload.request).decode('ascii') + '\n#### REQUEST END ####')
+        # message_bytes = base64.b64decode(base64_bytes)
     print()
 
 
-# TODO: change to md5
 def randomString():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=12))
 
 
+def isBase64(s):
+    try:
+        return base64.b64encode(base64.b64decode(s)).decode('ascii') == s
+    except Exception:
+        return False
+
+
 if __name__ == '__main__':
+    # minor input validation
+    if not isBase64(args['reqb64']):
+        args['reqb64'] = base64.b64encode('Not specified.'.encode('ascii')).decode('ascii')
     main()
 
 
