@@ -6,6 +6,7 @@ import pytz
 import string
 import random
 import base64
+from colorama import Fore, Style
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -47,7 +48,7 @@ parser.add_argument('--xxe', action='store_true', help='')
 parser.add_argument('--path-traversal-linux', action='store_true', help='')
 parser.add_argument('--path-traversal-windows', action='store_true', help='')
 parser.add_argument('--log4j', action='store_true', help='')
-parser.add_argument('--dbms', nargs='*', help='all, oracle, mssql, postgresql, mysql') # will add a ton more
+parser.add_argument('--dbms', nargs='*', help='all, oracle, mssql, postgresql, mysql')
 parser.add_argument('--collaborator', help='specify domain or IP', default='{collaborator}')
 parser.add_argument('--time', help='specify time delay caused by payloads in seconds', default='{time}')
 parser.add_argument('--ssrf-domain', help='specify a domain to use in ssrf bypasses', default='{domain}')
@@ -154,14 +155,12 @@ def query():
     identifier = args['query'].split('.')[0]
     payloads = session.query(Payload).filter(Payload.identifier == identifier).all()
     for payload in payloads:
+        print(Fore.RED + 'Identifier: ' + Style.RESET_ALL + payload.identifier)
+        print(Fore.RED + 'Payload: ' + Style.RESET_ALL + payload.payload)
+        print(Fore.RED + 'Date: ' + Style.RESET_ALL + payload.creationDate)
+        print(Fore.RED + 'Note: ' + Style.RESET_ALL + payload.note)
+        print(Fore.RED + '#### REQUEST START ####\n' + Style.RESET_ALL + base64.b64decode(payload.request).decode('ascii').replace('%s', Fore.LIGHTRED_EX + '%s' + Style.RESET_ALL) + Fore.RED + '\n##### REQUEST END #####' + Style.RESET_ALL)
         print()
-        print('Identifier: ' + payload.identifier)
-        print('Payload: ' + payload.payload)
-        print('Date: ' + payload.creationDate)
-        print('Note: ' + payload.note)
-        print('Request: \n### REQUEST START ###\n' + base64.b64decode(payload.request).decode('ascii') + '\n#### REQUEST END ####')
-        # message_bytes = base64.b64decode(base64_bytes)
-    print()
 
 
 def randomString():
@@ -176,7 +175,6 @@ def isBase64(s):
 
 
 if __name__ == '__main__':
-    # minor input validation
     if not isBase64(args['reqb64']):
         args['reqb64'] = base64.b64encode('Not specified.'.encode('ascii')).decode('ascii')
     main()

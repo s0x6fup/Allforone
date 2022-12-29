@@ -23,7 +23,7 @@ clauses  = ['[', '[[', '{', '{{', '(', '((', ']', ']]', '}', '}}', ')', '))', '[
 
 jsonValues = ['null','true','false']
 
-nulls = ['NULL', 'None', 'none', 'NaN'] # not adding null since it is in jsonValues
+nulls = ['', 'NULL', 'None', 'none', 'NaN'] # not adding null since it is in jsonValues
 
 uuid = ['23c36ef2-84ee-11ed-a1eb-0242ac120002', '316f78f2-84ee-11ed-a1eb-0242ac120002', '91144219-b81b-4192-bd85-62ccacc976d2', 'fcd69fbd-2d45-408a-9154-4bfe611129bf']
 

@@ -11,10 +11,12 @@ suffixes = [
     '--',
     ' -- ',
     '#',
-    '/*'
+    '/*',
+    '%00'
 ]
 
 templates = [
+    '',
     ' OR ""-"{no_suffix}',
     ' OR "" "{no_suffix}',
     ' OR ""&"{no_suffix}',
@@ -41,6 +43,9 @@ def generate():
             for template in templates:
                 word = prefix + template
                 
+                if word == '':
+                    continue
+
                 if not '{no_suffix}' in word:
                     word += suffix
                 else:
