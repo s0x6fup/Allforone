@@ -18,13 +18,13 @@ sqlOperators = [
 
 suffixes = [
     '',
-    '--',
-    ' ("',
-    ' (("',
-    ' ((("',
-    ' (',
-    ' ((',
-    ' ((('
+    '--'
+    # ' ("',
+    # ' (("',
+    # ' ((("',
+    # ' (',
+    # ' ((',
+    # ' ((('
 ]
 
 templates = [
@@ -37,6 +37,7 @@ templates = [
 def generate():
     wordlist = []
 
+    # injection via operators
     for prefix in prefixes:
         for sqlOperator in sqlOperators:
             for template in templates:
@@ -45,4 +46,7 @@ def generate():
                     wordlist.append(word)
                     wordlist.append(word.replace('"', '\''))
     
+    # injection via string concatination
+    # TODO
+    wordlist = list(set(wordlist))
     return wordlist

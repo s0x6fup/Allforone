@@ -43,9 +43,6 @@ xmlEncodings = [
 ]
 
 
-# {as_is}
-# {encoding}
-# {version}
 def generate():
     wordlist = []
 
