@@ -122,7 +122,7 @@ def wordlist():
     # --path-traversal-php
     # TODO
 
-    if args['dbms'] != None:
+    if args['dbms'] != None and not 'quick' in args['dbms']:
         if 'all' in args['dbms'] or 'oracle' in args['dbms']:
             wordlist += sqlInjectionOracle.generate()
 
@@ -134,6 +134,10 @@ def wordlist():
 
         if 'all' in args['dbms'] or 'mysql' in args['dbms']:
             wordlist += sqlInjectionMysql.generate()
+
+    if 'quick' in args['dbms']:
+        wordlist += sqlInjectionOracle.generate_quick()
+    
 
     with open(currentDir + '\\' + 'allforoneWordlist.txt', 'w') as f:
         for word in wordlist:

