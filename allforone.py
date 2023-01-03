@@ -135,8 +135,8 @@ def wordlist():
         if 'all' in args['dbms'] or 'mysql' in args['dbms']:
             wordlist += sqlInjectionMysql.generate()
 
-    if 'quick' in args['dbms']:
-        wordlist += sqlInjectionOracle.generate_quick()
+    # if args['dbms'] != None and 'quick' in args['dbms']:
+    #     wordlist += sqlInjectionOracle.generate_quick()
     
 
     with open(currentDir + '\\' + 'allforoneWordlist.txt', 'w') as f:
