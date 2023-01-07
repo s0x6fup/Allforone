@@ -17,6 +17,8 @@ suffixes = [
 
 templates = [
     '{collaborator}',
+    '{domain}',
+    'spoofed.oastify.com',
     '{collaborator}#{domain}',
     '{collaborator}:#{domain}',
     '@{collaborator}',

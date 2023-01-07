@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from argparse import ArgumentParser
 from lib import errorsAndExpectedInput
 from lib import xss
+from lib import blindXss
 from lib import commandInjection
 from lib import sqlInjection
 from lib import noSqlInjection
@@ -38,6 +39,7 @@ Base = declarative_base()
 parser = ArgumentParser(description='')
 parser.add_argument('--errors', action='store_true', help='')
 parser.add_argument('--xss', action='store_true', help='')
+parser.add_argument('--blind-xss', help='specify xss server domain or IP', default=None)
 parser.add_argument('--osi', action='store_true', help='')
 parser.add_argument('--sql', action='store_true', help='')
 parser.add_argument('--nosql', action='store_true', help='')
@@ -88,6 +90,9 @@ def wordlist():
 
     if args['xss']:
         wordlist += xss.generate()
+
+    if args['blind_xss'] != None:
+        wordlist += blindXss.generate(args['blind_xss'])
 
     if args['osi']:
         wordlist += commandInjection.generate()
@@ -141,6 +146,13 @@ def wordlist():
 
     with open(currentDir + '\\' + 'allforoneWordlist.txt', 'w') as f:
         for word in wordlist:
+            # a hacky temp solution for blind XSS
+            if type(word) == type({}) and word['identifier'] != None:
+                identifier = word['identifier']
+                word = word['payload']
+                payload = Payload(identifier=identifier, payload=word, note=args['note'], request=args['reqb64'])
+                session.add(payload)
+
             if '{collaborator}' in word:
                 identifier = randomString()
                 word = word.replace('{collaborator}', identifier + '.' + args['collaborator'])
