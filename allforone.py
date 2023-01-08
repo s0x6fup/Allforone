@@ -171,11 +171,11 @@ def query():
     identifier = args['query'].split('.')[0]
     payloads = session.query(Payload).filter(Payload.identifier == identifier).all()
     for payload in payloads:
-        print(Fore.RED + 'Identifier: ' + Style.RESET_ALL + payload.identifier)
-        print(Fore.RED + 'Payload: ' + Style.RESET_ALL + payload.payload)
-        print(Fore.RED + 'Date: ' + Style.RESET_ALL + payload.creationDate)
-        print(Fore.RED + 'Note: ' + Style.RESET_ALL + payload.note)
-        print(Fore.RED + '#### REQUEST START ####\n' + Style.RESET_ALL + base64.b64decode(payload.request).decode('ascii').replace('%s', Fore.LIGHTRED_EX + '%s' + Style.RESET_ALL) + Fore.RED + '\n##### REQUEST END #####' + Style.RESET_ALL)
+        print(Fore.CYAN + 'Identifier: ' + Style.RESET_ALL + payload.identifier)
+        print(Fore.CYAN + 'Payload: ' + Style.RESET_ALL + payload.payload)
+        print(Fore.CYAN + 'Date: ' + Style.RESET_ALL + payload.creationDate)
+        print(Fore.CYAN + 'Note: ' + Style.RESET_ALL + payload.note)
+        print(Fore.CYAN + '#### REQUEST START ####\n' + Style.RESET_ALL + base64.b64decode(payload.request).decode('ascii').replace('%s', Fore.LIGHTRED_EX + '%s' + Style.RESET_ALL) + Fore.CYAN + '\n##### REQUEST END #####' + Style.RESET_ALL)
         print()
 
 
