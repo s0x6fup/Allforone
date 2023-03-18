@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import os
-import sqlalchemy
 import datetime
 import pytz
 import string
@@ -180,7 +179,7 @@ def query():
 
 
 def randomString():
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=12))
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=12)).lower()
 
 
 def isBase64(s):
