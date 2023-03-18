@@ -92,6 +92,17 @@ def generate():
     # polyglots
     wordlist += polyglots
 
+    # early query termination
+    for quotation_mark in quotation_marks:
+        for prefix in prefixes:
+            for suffix in suffixes:
+                word = prefix + suffix
+                if word.startswith(' '):
+                    word = word[1:]
+                word = word.replace('{quotation_mark}',quotation_mark)
+                if word not in wordlist:
+                    wordlist.append(word)
+
     # string concat boolean
     for quotation_mark in quotation_marks:
         for string_concat_template in string_concat_templates:
@@ -122,25 +133,4 @@ def generate():
     # wildcard
 
     return wordlist
-    # for prefix in prefixes:
-    #     for suffix in suffixes:
-    #         for template in templates:
-    #             word = prefix + template
 
-    #             if not '{no_suffix}' in word:
-    #                 word += suffix
-    #             else:
-    #                 word = word.replace('{no_suffix}', '')
-
-    #             if not '{no_suffix}' in word:
-    #                 word += suffix
-    #             else:
-    #                 word = word.replace('{no_suffix}', '')
-
-    #             wordlist.append(word)
-    #             wordlist.append(word.replace(' ', '/**/'))
-
-    #             word = word.replace('"', '\'')
-    #             wordlist.append(word)
-    #             wordlist.append(word.replace(' ', '/**/'))
-    
