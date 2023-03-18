@@ -6,7 +6,7 @@ polyglots = [
     '',
     '1\'"`();/**/--#',
     'SLEEP(20) /*\' or SLEEP(20) or \'" or SLEEP(20) or "*/',
-    '(select 1 from pg_sleep(20)) /*\' or (select 1 from pg_sleep(20)) or \'" or (select 1 from pg_sleep(20)) or "*/'
+    '(select 1 from pg_sleep(20)) /*\' or (select 1 from pg_sleep(20)) or \'" or (select 1 from pg_sleep(20)) or "*/',
 ]
 
 prefixes = [

